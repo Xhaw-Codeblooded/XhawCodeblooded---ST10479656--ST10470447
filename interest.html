@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Empowering The Nation - Fee Calculator</title>
+    <link rel="stylesheet" href="interest.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EMPOWERING THE NATION</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">HOME ▼</a></li>
+                    <li><a href="courses.html">COURSES</a></li>
+                    <li><a href="interest.html" class="active">FEE CALCULATOR</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <h2>Course Fee Calculator</h2>
+            <form id="feeForm">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" placeholder="Enter here" required>
+
+                <label for="phoneNumber">Phone Number</label>
+                <input type="text" id="phoneNumber" placeholder="Enter here" required>
+
+                <label for="emailAddress">Email Addresss</label>
+                <input type="email" id="emailAddress" placeholder="Enter here" required>
+
+                <div class="courses-section">
+                    <p>Select a course or more:</p>
+                    <div class="course-group">
+                        <p>Six-Month Courses</p>
+                        <div class="checkbox-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="course" data-price="1500" value="First Aid">
+                                <span class="checkmark"></span>
+                                First Aid - R1500
+                            </label>
+                        </div>
+                        <div class="checkbox-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="course" data-price="1500" value="Sewing">
+                                <span class="checkmark"></span>
+                                Sewing - R1500
+                            </label>
+                        </div>
+                        <div class="checkbox-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="course" data-price="1500" value="Landscaping">
+                                <span class="checkmark"></span>
+                                Landscaping - R1500
+                            </label>
+                        </div>
+                        <div class="checkbox-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="course" data-price="1500" value="Life Skills">
+                                <span class="checkmark"></span>
+                                Life Skills - R1500
+                            </label>
+                        </div>
+                    </div>
+                    <div class="course-group">
+                        <p>Six-Week Short Courses</p>
+                        <div class="checkbox-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="course" data-price="750" value="Child minding">
+                                <span class="checkmark"></span>
+                                Child minding - R750
+                            </label>
+                        </div>
+                        <div class="checkbox-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="course" data-price="750" value="Cooking">
+                                <span class="checkmark"></span>
+                                Cooking - R750
+                            </label>
+                        </div>
+                        <div class="checkbox-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="course" data-price="750" value="Garden maintenance">
+                                <span class="checkmark"></span>
+                                Garden maintenance - R750
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="calculateBtn">Calculate Total Cost</button>
+                <div class="results">
+                    <p>Including VAT (15%)</p>
+                    <p>Total Amount: <span id="totalAmount">R0.00</span></p>
+                </div>
+                <div class="invoice-row">
+                    <a href="#" id="invoiceBtn">GET INVOICE! <span class="arrow">⟶</span></a>
+                </div>
+            </form>
+        </main>
+        <footer>
+            <p>@ 2025 Empowering the nation.<br>All rights reserved.</p>
+        </footer>
+    </div>
+    <script>
+        function formatCurrency(amount) {
+            return "R" + amount.toFixed(2);
+        }
+
+        function calculateTotal() {
+            const checkboxes = document.querySelectorAll('.course:checked');
+            let total = 0;
+            checkboxes.forEach(cb => {
+                total += parseFloat(cb.dataset.price);
+            });
+            let discount = 0;
+            if (checkboxes.length === 2) discount = 0.05;
+            else if (checkboxes.length === 3) discount = 0.10;
+            else if (checkboxes.length > 3) discount = 0.15;
+            total = total * (1 - discount);
+            total = total * 1.15; // VAT
+            document.getElementById('totalAmount').textContent = formatCurrency(total);
+        }
+
+        document.querySelectorAll('.course').forEach(cb => {
+            cb.addEventListener('change', calculateTotal);
+        });
+
+        document.getElementById('calculateBtn').addEventListener('click', calculateTotal);
+    </script>
+</body>
+</html></div></label></div> 
