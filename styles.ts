@@ -1,15 +1,17 @@
 import { StyleSheet } from 'react-native';
+import BottomNav from './BottomNav';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: 40,
-    paddingHorizontal: 10, // consistent horizontal padding
+    paddingHorizontal: 10, 
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#23405A',
+    marginTop:40,
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -36,6 +38,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 22,
+    marginTop: 40,
+    marginBottom: 10,
     fontWeight: 'bold',
     color: '#23405A',
     flexShrink: 1,
@@ -104,6 +108,7 @@ const styles = StyleSheet.create({
   },
 
   // CoursesScreen styles
+  
   coursesTitle: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -143,8 +148,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollContent: {
-    paddingBottom: 100, // prevents bottom nav from overlapping content
-  },
+    paddingBottom: 100, 
+  
+},
+
+
 
   //  CourseDetailScreen styles
   topicItem: {
@@ -189,9 +197,15 @@ const styles = StyleSheet.create({
   },
 
   // ContactScreen styles
+  map: {
+    height: 300,
+    marginHorizontal: 16,
+    textAlign: 'center',
+  },
+
   locationItem: {
     fontSize: 16,
-    color: '#007AFF', // clickable blue link
+    color: '#007AFF', 
     marginVertical: 8,
     textDecorationLine: 'underline',
   },
@@ -203,7 +217,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
+  tomNavFixed: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#ccc',
+    },
+    //BottomNav styles 
+    bottomNavFixed: {
+      position: 'absolute',
+      bottom: 20,
+      left: 0,
+      right: 0,
+      backgroundColor: '#ccc',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+
+    },
+    fullScreenContainer: {
+      flex: 1,
+      backgroundColor: '#fff',
+    }
+    
 });
+
 
 export default styles;
 

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { SectionList, StyleSheet,Linking, Text, View, Image, ScrollView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { SectionList, StyleSheet,Linking, Text, View, Image, ScrollView, Dimensions } from 'react-native';
+import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import  { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -9,16 +9,12 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CheckBox } from 'react-native-elements';
 import styles  from './styles';
 import BottomNav from './BottomNav'
+import MapView, {Marker} from 'react-native-maps';
 
 
 
 
-
-
-
-
-
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -96,7 +92,7 @@ function HomeScreen({ navigation }: { navigation: StackNavigationProp<RootStackP
 }
 import type { StackNavigationProp } from '@react-navigation/stack';
 
-type RootStackParamList = {
+export type RootStackParamList = {
   Home: undefined;
   Courses: undefined;
   CourseDetail: { course: string };
@@ -110,62 +106,69 @@ type CoursesScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Cour
 
 function CoursesScreen({ navigation }: { navigation: CoursesScreenNavigationProp }) {
     return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          style={styles.logo}
-          source={require('./assets/EMP_LOGO.png')}
-        />
-        <Text style={styles.headerTitle}>EMPOWERING THE NATION</Text>
-      </View>
-      <View style={{ alignItems: 'center', marginBottom: 20 }}>
-        <Text style={styles.coursesTitle}>COURSES</Text>
-      </View>
-      <View style={styles.coursesRow}>
-        <View style={styles.coursesColumn}>
-          <Text style={styles.coursesSubtitle}>Six - Months</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'First Aid' })}>
-            <Text style={styles.coursesItem}>· First Aid</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Sewing' })}>
-            <Text style={styles.coursesItem}>· Sewing</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Landscaping' })}>
-            <Text style={styles.coursesItem}>· Landscaping</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Life Skills' })}>
-            <Text style={styles.coursesItem}>· Life Skills</Text>
-          </TouchableOpacity>
-          <Text style={styles.coursesPrice}>Each: R1500</Text>
+    <><ScrollView style={styles.fullScreenContainer}>
+        <View style={styles.header}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/EMP_LOGO.png')} />
+          <Text style={styles.headerTitle}>EMPOWERING THE NATION</Text>
         </View>
-        <View style={styles.coursesColumn}>
-          <Text style={styles.coursesSubtitle}>Six - Weeks</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Child Minding' })}>
-            <Text style={styles.coursesItem}>· Child Minding</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Cooking' })}>
-            <Text style={styles.coursesItem}>· Cooking</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Garden Maintenance' })}>
-            <Text style={styles.coursesItem}>· Garden Maintenance</Text>
-          </TouchableOpacity>
-          <Text style={styles.coursesPrice}>Each: R750</Text>
+        <View style={{ alignItems: 'center', marginBottom: 10, marginTop:40 }}>
+          <Text style={styles.coursesTitle}>COURSES</Text>
         </View>
-      </View>
-      <Text style={styles.coursesNote}>
-        *Click one of the courses for more information
-      </Text>
-      {/* Bottom Navigation - OUTSIDE the ScrollView */}
-      <View style={styles.bottomNav}>
-        <FontAwesome name="home" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Home')} />
-        <FontAwesome name="book" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Courses')} />
-        <FontAwesome name="calculator" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('FeeCalculator')} />
-        <FontAwesome name="address-book" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Contact')} />
-        <FontAwesome name="arrow-circle-left" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.goBack()} />
-      </View>
-    </ScrollView>
-  );
+        <View style={styles.coursesRow}>
+          <View style={styles.coursesColumn}>
+            <Text style={styles.coursesSubtitle}>Six - Months</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'First Aid' })}>
+              <Text style={styles.coursesItem}>· First Aid</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Sewing' })}>
+              <Text style={styles.coursesItem}>· Sewing</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Landscaping' })}>
+              <Text style={styles.coursesItem}>· Landscaping</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Life Skills' })}>
+              <Text style={styles.coursesItem}>· Life Skills</Text>
+            </TouchableOpacity>
+            <Text style={styles.coursesPrice}>Each: R1500</Text>
+          </View>
+          <View style={styles.coursesColumn}>
+            <Text style={styles.coursesSubtitle}>Six - Weeks</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Child Minding' })}>
+              <Text style={styles.coursesItem}>· Child Minding</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Cooking' })}>
+              <Text style={styles.coursesItem}>· Cooking</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('CourseDetail', { course: 'Garden Maintenance' })}>
+              <Text style={styles.coursesItem}>· Garden Maintenance</Text>
+            </TouchableOpacity>
+            <Text style={styles.coursesPrice}>Each: R750</Text>
+          </View>
+        </View>
+        <Text style={styles.coursesNote}>
+          *Click one of the courses for more information
+        </Text>
+      </ScrollView>
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNavFixed}>
+          <FontAwesome name="home" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Home')} />
+          <FontAwesome name="book" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Courses')} />
+          <FontAwesome name="calculator" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('FeeCalculator')} />
+          <FontAwesome name="address-book" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Contact')} />
+
+          </View>
+        </>
+    );
+  
 }
+type CourseDetailRouteProp = RouteProp<RootStackParamList, 'CourseDetail'>;
+interface CourseDetailProps {
+  route: CourseDetailRouteProp;
+  navigation: StackNavigationProp<RootStackParamList, 'CourseDetail'>; 
+}
+
 const courseDetails: Record<string, { purpose: string; topics: string[]; fee: string }> = {
   "First Aid": {
     purpose: "To provide first Aid awareness and basic life support.",
@@ -243,7 +246,11 @@ const courseDetails: Record<string, { purpose: string; topics: string[]; fee: st
   },
   };
 
-function CourseDetailScreen({ route }: { route: { params: { course: string } } }) {
+type CoursesDetailNavigationProp = StackNavigationProp<RootStackParamList, 'CourseDetail'>;
+
+
+
+function CourseDetailScreen({ route, navigation }: CourseDetailProps) {
   const { course } = route.params;
   const detail = courseDetails[course];
 
@@ -257,6 +264,7 @@ function CourseDetailScreen({ route }: { route: { params: { course: string } } }
   }
 
   return (
+    <>
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{course}</Text>
       <Text style={styles.description}><Text style={{ fontWeight: 'bold' }}>Purpose:</Text> {detail.purpose}</Text>
@@ -266,14 +274,23 @@ function CourseDetailScreen({ route }: { route: { params: { course: string } } }
         <Text key={index} style={styles.topicItem}>• {topic}</Text>
       ))}
     </ScrollView>
-  );
-}
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'FeeCalculator'>;
-};
+    
+    
+  
+    <View style={styles.bottomNavFixed}>
+        <FontAwesome name="home" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Home')} />
+        <FontAwesome name="book" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Courses')} />
+        <FontAwesome name="calculator" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('FeeCalculator')} />
+        <FontAwesome name="address-book" size={32} color="#222" style={styles.navIcon} onPress={() => navigation.navigate('Contact')} />
+      </View>
+      </>
+     );
+    }
+    
+   
+type FeeCalculatorProps = NativeStackNavigationProp<RootStackParamList, 'FeeCalculator'>;
 
-
-function FeeCalculatorScreen() {
+function FeeCalculatorScreen({ navigation }: { navigation: StackNavigationProp<RootStackParamList, 'FeeCalculator'> }) {s
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [totalCost, setTotalCost] = useState<number | null>(null);
 
@@ -309,8 +326,10 @@ function FeeCalculatorScreen() {
     setTotalCost(finalTotal);
   };
 
+  
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.fullScreenContainer}>
+    <ScrollView contentContainerStyle={{paddingHorizontal: 20, paddingBottom:120}}>
       <Text style={styles.title}>Fee Calculator</Text>
       <Text style={styles.description}>Select courses to calculate total cost (including 15% VAT and discounts):</Text>
 
@@ -320,6 +339,7 @@ function FeeCalculatorScreen() {
             title={`${course} - R${courseFees[course]}`}
             checked={selectedCourses.includes(course)}
             onPress={() => toggleCourse(course)}
+            
           />
         </View>
       ))}
@@ -335,28 +355,181 @@ function FeeCalculatorScreen() {
           <Text style={styles.totalText}>Total (incl. VAT): R{totalCost.toFixed(2)}</Text>
         </View>
       )}
-      <BottomNav />
+     
     </ScrollView>
+    {/* Bottom Navigation */}
+      <View style={styles.bottomNavFixed}>
+        <FontAwesome
+          name="home"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('Home')}
+        />
+        <FontAwesome
+          name="book"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('Courses')}
+        />
+        <FontAwesome
+          name="calculator"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('FeeCalculator')}
+        />
+        <FontAwesome
+          name="address-book"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('Contact')}
+        />
+      </View>
+    </View>
   );
 }
+
+
+
+type ContactScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Contact'>;
+
+const locations = [
+  {
+    title: 'Johannesburg CBD',
+    address: '45 Commissioner St',
+    latitude: -26.11,
+    longitude: 28.058,
+  },
+  {
+    title: 'Randburg',
+    address: '12 Beyers Naudé Dr',
+    latitude: -26.0941,
+    longitude: 27.9985,
+  },
+  {
+    title: 'Soweto',
+    address: '88 Main Rd',
+    latitude: -26.2678,
+    longitude: 27.8585,
+  },
+];
+
+// Helper function for opening  map links
+const openMap = (latitude: number, longitude: number, label: string) => {
+  const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${encodeURIComponent(label)}`;
+  Linking.openURL(url);
+};
+
+
+function ContactScreen({ navigation }: { navigation: StackNavigationProp<RootStackParamList, 'Contact'> }) {
+  return (
+  
+    <View style={styles.fullScreenContainer}>
+      
+      
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}>
+        
+        <Text style={styles.title}>Contact Us</Text>
+
+        <Text style={styles.header}>
+          We'd love to hear from you! Please reach out to us through any of the following channels.
+        </Text>
+
+        
+    
+
+       
+        <TouchableOpacity onPress={() => Linking.openURL('mailto:info@empoweringthenation.co.za')}>
+             <Text style={styles.description}>
+                <Text style={{ fontWeight: 'bold' }}>Email: </Text> info@empoweringthenation.co.za
+             </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity onPress={() => Linking.openURL('tel:+27316794012')}>
+             <Text style={styles.description}>
+                <Text style={{ fontWeight: 'bold' }}>Phone: </Text> +27 31 679 4012
+             </Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.description}>Locations:</Text>
+
+        {Array.isArray(locations) && locations.map((loc, index) => (
+          // Each location is a tappable item to open the map
+          <TouchableOpacity 
+              key={index} 
+              onPress={() => openMap(loc.latitude, loc.longitude, loc.title)}
+          >
+           
+            <Text style={styles.locationItem}>
+               • {loc.title} – {loc.address}
+            </Text>
+          </TouchableOpacity>
+        ))}
+
+       
+        <MapView
+          style={{ width: '100%', height: 300, marginTop: 20, borderRadius: 10 }}
+          initialRegion={{
+            latitude: -26.2,
+            longitude: 28.0,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
+          }}
+        >
+          {locations.map((loc, index) => (
+            <Marker
+              key={`marker-${index}`} 
+              coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
+              title={loc.title}
+              description={loc.address}
+            />
+          ))}
+        </MapView>
+      </ScrollView>
+
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNavFixed}>
+        <FontAwesome
+          name="home"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('Home')}
+        />
+        <FontAwesome
+          name="book"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('Courses')}
+        />
+        <FontAwesome
+          name="calculator"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('FeeCalculator')}
+        />
+        <FontAwesome
+          name="address-book"
+          size={32}
+          color="#222"
+          style={styles.navIcon}
+          onPress={() => navigation.navigate('Contact')}
+        />
+      </View>
+    </View>
+  );
+}
+
+
  
 
-function ContactScreen() {
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Contact Us</Text>
-      <Text style={styles.description}> Email: info@empoweringthenation.co.za</Text>
-      <Text style={styles.description}> Phone: +27 31 679 4012</Text>
-      <Text style={styles.description}> Locations:</Text>
 
-      <Text style={styles.locationItem}>• Johannesburg CBD – 45 Commissioner St</Text>
-      <Text style={styles.locationItem}>• Randburg – 12 Beyers Naudé Dr</Text>
-      <Text style={styles.locationItem}>• Soweto – 88 Main Rd</Text>
 
-      <BottomNav />
-    </ScrollView>
-  );
-}
 
 
 
