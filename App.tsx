@@ -1,11 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { SectionList, StyleSheet,Linking, Text, View, Image, ScrollView, Dimensions } from 'react-native';
+import { SectionList, StyleSheet,Linking, Text, View, Image, ScrollView, Dimensions, Alert } from 'react-native';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import  { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import 'react-native-gesture-handler'
+import React from 'react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { CheckBox } from 'react-native-elements';
 import styles  from './styles';
 import BottomNav from './BottomNav'
@@ -18,16 +21,17 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1}}>
+    <NavigationContainer> 
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Courses" component={CoursesScreen} />
         <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
         <Stack.Screen name="FeeCalculator" component={FeeCalculatorScreen} />
         <Stack.Screen name="Contact" component={ContactScreen} />
-
       </Stack.Navigator>
     </NavigationContainer>
+  </GestureHandlerRootView>
   );
 }
 
@@ -91,6 +95,7 @@ function HomeScreen({ navigation }: { navigation: StackNavigationProp<RootStackP
   );
 }
 import type { StackNavigationProp } from '@react-navigation/stack';
+import { TextInput } from 'react-native-gesture-handler';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -290,9 +295,12 @@ function CourseDetailScreen({ route, navigation }: CourseDetailProps) {
    
 type FeeCalculatorProps = NativeStackNavigationProp<RootStackParamList, 'FeeCalculator'>;
 
-function FeeCalculatorScreen({ navigation }: { navigation: StackNavigationProp<RootStackParamList, 'FeeCalculator'> }) {s
+function FeeCalculatorScreen({ navigation }: { navigation: StackNavigationProp<RootStackParamList, 'FeeCalculator'> }) {
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [totalCost, setTotalCost] = useState<number | null>(null);
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
 
   const courseFees: Record<string, number> = {
     "First Aid": 1500,
@@ -326,27 +334,82 @@ function FeeCalculatorScreen({ navigation }: { navigation: StackNavigationProp<R
     setTotalCost(finalTotal);
   };
 
+  const handleGetInvoice = () => {
+    if (!fullName || !phoneNumber || !email) {
+      Alert.alert('Missing Information', 'Please enter your name, phone number, and email before generating an invoice.');
+      return;
+    }
+    if (selectedCourses.length === 0) {
+      Alert.alert('No Courses Selected', 'Please select at least one course.');
+      return;
+    }
+    if (totalCost === null) {
+      Alert.alert('Calculate Total First', 'Please calculate the total cost before generating your invoice.');
+      return;
+    }
+
+    const discountRate = getDiscountRate(selectedCourses.length) * 100;
+    const courseList = selectedCourses.join(', ');
+
+    Alert.alert(
+      'Invoice Details',
+      `Full Name: ${fullName}\nPhone: ${phoneNumber}\nEmail: ${email}\n\nCourses: ${courseList}\nDiscount: ${discountRate}%\nTotal (incl. VAT): R${totalCost.toFixed(2)}`
+    );
+  };
+
+
   
   return (
     <View style={styles.fullScreenContainer}>
     <ScrollView contentContainerStyle={{paddingHorizontal: 20, paddingBottom:120}}>
       <Text style={styles.title}>Fee Calculator</Text>
-      <Text style={styles.description}>Select courses to calculate total cost (including 15% VAT and discounts):</Text>
+      <Text style={styles.description}>SELECT COURSES:</Text>
+      <Text style={styles.description}> Please Fill Your Details</Text>
 
+     <TextInput
+          style={styles.input}
+          placeholder="Full Name"
+          value={fullName}
+          onChangeText={setFullName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Phone Number"
+          keyboardType="phone-pad"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email Address"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+
+      {/* Courses List */}
       {Object.keys(courseFees).map(course => (
         <View key={course} style={styles.courseOption}>
           <CheckBox
             title={`${course} - R${courseFees[course]}`}
             checked={selectedCourses.includes(course)}
             onPress={() => toggleCourse(course)}
-            
-          />
+            />
         </View>
       ))}
 
+
+      {/* Buttons */}
       <TouchableOpacity onPress={calculateTotal} style={styles.calculateButton}>
         <Text style={styles.buttonText}>Calculate Total Cost</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleGetInvoice} style={[styles.calculateButton, { backgroundColor: '#2196F3' }]}>
+          <Text style={styles.buttonText}>Get Invoice</Text>
+        </TouchableOpacity>
+      
+      
+      
 
       {totalCost !== null && (
         <View style={styles.resultContainer}>
